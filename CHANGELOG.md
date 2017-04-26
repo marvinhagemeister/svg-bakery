@@ -1,5 +1,5 @@
 # Changelog
 
-## 1.0.0
+## 0.5.0
 
-- initial Release
+- first pre-release

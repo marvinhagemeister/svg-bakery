@@ -1,6 +1,6 @@
 {
   "name": "svg-bakery",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "Quickly generate svg sprites",
   "bin": {
     "svg-bakery": "dist/bin.js"
