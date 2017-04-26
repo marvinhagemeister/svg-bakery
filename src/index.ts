@@ -3,6 +3,11 @@ import * as path from "path";
 import { findFiles } from "./fs";
 import Spriter, { SpriteBuilder, SpriteResult } from "./Spriter";
 
+export interface PreparedFiles {
+  file: string;
+  buf: Buffer;
+}
+
 export async function build(dest: string, needle: string | string[] = []): Promise<void> {
   if (!Array.isArray(needle)) {
     needle = [needle];
@@ -14,9 +19,13 @@ export async function build(dest: string, needle: string | string[] = []): Promi
 
   const spriter = new Spriter(dest);
 
-  await Promise.all(needle
+  const spriteFiles = await Promise.all(needle
     .map(globPath => attachFiles(globPath, spriter)),
   );
+
+  const prepared: PreparedFiles[] = [].concat.apply([], spriteFiles);
+  const sprite = await Promise.all(spriteFiles);
+  prepared.forEach(res => spriter.add(res.file, res.buf));
 
   const res = await spriter.compile();
   const { path: target, contents } = res.symbol.sprite;
@@ -29,11 +38,8 @@ export async function attachFiles(globber: string, spriter: SpriteBuilder): Prom
     throw new Error("No input files found.");
   }
 
-  const spriteFiles = files.map(file => {
+  return Promise.all(files.map(file => {
     return readFile(path.resolve(file))
       .then(buf => ({ buf, file }));
-  });
-
-  const sprite = await Promise.all(spriteFiles);
-  sprite.forEach(res => spriter.add(res.file, res.buf));
+  }));
 }
