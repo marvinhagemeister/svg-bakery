@@ -28,7 +28,7 @@ Usage: bin [options] <file ...>
 
 ## Special Thanks
 
-Special thanks to @RubenGarcia-sevenval for lot's of helpful debugging.
+Special thanks to [@RubenGarcia-sevenval](https://github.com/RubenGarcia-sevenval) for lot's of helpful debugging.
 
 ## License
 
