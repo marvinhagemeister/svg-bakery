@@ -1,3 +1,31 @@
-# TypeScript Starter
+# SVG-Bakery
 
-Slim Boilerplate for TypeScript based projects.
+Simple CLI-Tool to generate svg sprites from multiple svg files.
+
+## Installation
+
+```bash
+# npm
+npm install --save-dev svg-bakery
+
+# yarn
+yarn add --dev svg-bakery
+```
+
+## Usage
+
+```bash
+Usage: bin [options] <file ...>
+
+  Options:
+
+    -h, --help        output usage information
+    -V, --version     output the version number
+    -o, --out <dest>  destination svg, defaults to 'sprite.svg'
+```
+
+`file` can be composed of multiple glob paths.
+
+## License
+
+MIT
