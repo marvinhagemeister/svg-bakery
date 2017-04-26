@@ -26,6 +26,10 @@ Usage: bin [options] <file ...>
 
 `file` can be composed of multiple glob paths.
 
+## Special Thanks
+
+Special thanks to @RubenGarcia-sevenval for lot's of helpful debugging.
+
 ## License
 
 MIT
