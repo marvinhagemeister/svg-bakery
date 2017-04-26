@@ -5,6 +5,10 @@
   "bin": {
     "svg-bakery": "dist/bin.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:marvinhagemeister/svg-bakery.git"
+  },
   "main": "dist/index.js",
   "author": "Marvin Hagemeister <marvin@marvinhagemeister.de>",
   "license": "MIT",
