@@ -18,12 +18,16 @@ describe("build", () => {
   });
 
   it("should do nothing if no input files given", async () => {
-    const res = await build(dest);
-    t.equal(fs.existsSync(dest), false);
+    try {
+      const res = await build(dest);
+      t.fail();
+    } catch (err) {
+      /* noop */
+    }
   });
 
   it("should generate an svg sprite", async () => {
-    const source = path.join(__dirname, "fixtures/input/**/*.svg")
+    const source = path.join(__dirname, "fixtures/input/**/*.svg");
     const res = await build(dest, source);
     t.equal(fs.existsSync(dest), true);
 

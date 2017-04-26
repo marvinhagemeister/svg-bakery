@@ -12,6 +12,7 @@
     "node_modules"
   ],
   "files": [
+    "./src/bin.ts",
     "./src/index.ts"
   ]
 }

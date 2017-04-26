@@ -9,7 +9,7 @@ export async function build(dest: string, needle: string | string[] = []): Promi
   }
 
   if (needle.length === 0) {
-    return Promise.resolve();
+    return Promise.reject(new Error("No input files found."));
   }
 
   const spriter = new Spriter(dest);
@@ -25,6 +25,10 @@ export async function build(dest: string, needle: string | string[] = []): Promi
 
 export async function attachFiles(globber: string, spriter: SpriteBuilder): Promise<any> {
   const files = await findFiles(globber);
+  if (files.length === 0) {
+    throw new Error("No input files found.");
+  }
+
   const spriteFiles = files.map(file => {
     return readFile(path.resolve(file))
       .then(buf => ({ buf, file }));
