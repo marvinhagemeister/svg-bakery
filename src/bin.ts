@@ -28,7 +28,6 @@ if (options.args.length === 0) {
 }
 
 build(options.out, options.args)
-  .then(() => console.warn(chalk.green("done!")))
   .catch(err => {
     console.log();
     console.error(chalk.red(err.message));
