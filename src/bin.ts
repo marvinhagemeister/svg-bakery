@@ -21,16 +21,12 @@ const options = program as CLIOptions;
 options.out = path.resolve(process.cwd(), options.out);
 
 if (options.args.length === 0) {
-  console.log();
   console.error(chalk.red("No glob paths specified. Please specify at least one path"));
-  console.log();
   process.exit(1);
 }
 
 build(options.out, options.args)
   .catch(err => {
-    console.log();
     console.error(chalk.red(err.message));
-    console.log();
     process.exit(1);
   });
