@@ -3,6 +3,8 @@ import * as program from "commander";
 import * as path from "path";
 import * as chalk from "chalk";
 import { build } from "./index";
+/* tslint:disable-next-line */
+const version = require("../package.json").version;
 
 /* tslint:disable no-console */
 
@@ -12,7 +14,7 @@ export interface CLIOptions {
 }
 
 program
-  .version("0.0.1")
+  .version(version)
   .usage("[options] <file ...>")
   .option("-o, --out <dest>", "destination svg, defaults to 'sprite.svg'", "sprite.svg")
   .parse(process.argv);
