@@ -21,7 +21,15 @@
     "test": "mocha --watch-extensions svg --compilers ts:ts-node/register --timeout=4000 'src/**/__tests__/*.spec.ts'",
     "test-watch": "npm t -- -w -R min",
     "coverage": "nyc npm t",
-    "prepublish": "npm run lint && npm t && npm run build"
+    "prepublishOnly": "npm run lint && npm t && npm run build",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --trailing-comma=all --write",
+      "npm run lint",
+      "git add"
+    ]
   },
   "dependencies": {
     "@types/chalk": "^0.4.31",
@@ -38,8 +46,11 @@
     "@types/sinon": "^2.3.3",
     "@types/svg-sprite": "^0.0.30",
     "chai": "^4.1.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.2",
     "mocha": "^3.4.2",
     "nyc": "^11.1.0",
+    "prettier": "^1.5.3",
     "rimraf": "^2.6.1",
     "sinon": "^2.4.1",
     "ts-node": "^3.3.0",
