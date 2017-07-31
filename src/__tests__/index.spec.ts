@@ -4,14 +4,14 @@ import { SpriteBuilder } from "../Spriter";
 import { build } from "../index";
 import * as fs from "fs";
 import * as path from "path";
-import { deleteFile, readFile } from "nicer-fs";
+import { remove, readFile } from "nicer-fs";
 
 describe("build", () => {
   const dest = path.resolve(__dirname, "fixtures/sprite.svg");
 
   afterEach(async () => {
     try {
-      await deleteFile(dest);
+      await remove(dest);
     } catch (err) {
       /* noop */
     }
@@ -19,7 +19,7 @@ describe("build", () => {
 
   it("should do nothing if no input files given", async () => {
     try {
-      const res = await build(dest);
+      await build(dest);
       t.fail();
     } catch (err) {
       /* noop */

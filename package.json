@@ -18,39 +18,36 @@
     "lint": "tslint 'src/**/*.ts'",
     "watch": "tsc -w",
     "build": "npm run clean && tsc",
-    "test": "mocha --watch-extensions svg --compilers ts:ts-node/register 'src/**/__tests__/*.spec.ts'",
+    "test": "mocha --watch-extensions svg --compilers ts:ts-node/register --timeout=4000 'src/**/__tests__/*.spec.ts'",
     "test-watch": "npm t -- -w -R min",
     "coverage": "nyc npm t",
     "prepublish": "npm run lint && npm t && npm run build"
   },
   "dependencies": {
     "@types/chalk": "^0.4.31",
-    "@types/commander": "^2.9.0",
-    "chalk": "^1.1.3",
-    "commander": "^2.9.0",
-    "nicer-fs": "^0.6.3",
-    "svg-sprite": "^1.3.6"
+    "@types/commander": "^2.9.1",
+    "chalk": "^2.0.1",
+    "commander": "^2.11.0",
+    "nicer-fs": "^1.1.1",
+    "svg-sprite": "^1.3.7"
   },
   "devDependencies": {
-    "@types/chai": "^3.4.35",
-    "@types/mocha": "^2.2.39",
-    "@types/node": "^7.0.13",
-    "@types/sinon": "^2.1.3",
-    "@types/svg-sprite": "^0.0.29",
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "nyc": "^10.1.2",
-    "rimraf": "^2.6.0",
-    "sinon": "^2.1.0",
-    "ts-node": "^2.1.0",
-    "tslint": "^4.4.2",
-    "typescript": "^2.2.1"
+    "@types/chai": "^4.0.1",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.17",
+    "@types/sinon": "^2.3.3",
+    "@types/svg-sprite": "^0.0.30",
+    "chai": "^4.1.0",
+    "mocha": "^3.4.2",
+    "nyc": "^11.1.0",
+    "rimraf": "^2.6.1",
+    "sinon": "^2.4.1",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
   },
   "nyc": {
-    "include": [
-      "src/*.ts",
-      "src/**/*.ts"
-    ],
+    "include": ["src/*.ts", "src/**/*.ts"],
     "exclude": [
       "typings",
       "node_modules/",
@@ -58,19 +55,9 @@
       "__tests__/**",
       "**/*.d.ts"
     ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "json",
-      "html",
-      "text",
-      "text-summary",
-      "lcovonly"
-    ],
+    "extension": [".ts"],
+    "require": ["ts-node/register"],
+    "reporter": ["json", "html", "text", "text-summary", "lcovonly"],
     "all": true
   }
 }

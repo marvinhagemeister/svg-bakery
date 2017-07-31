@@ -58,8 +58,8 @@ export default class Spriter implements SpriteBuilder {
       const base = path.dirname(filePath);
       this.spriter.add(new File({
         base,
-        path: filePath,
         contents,
+        path: filePath,
       }));
     } else {
       this.spriter.add(file);
