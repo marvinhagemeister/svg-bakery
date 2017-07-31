@@ -1,6 +1,5 @@
-import { readFile, writeFile } from "nicer-fs";
+import { readFile, writeFile, find } from "nicer-fs";
 import * as path from "path";
-import { findFiles } from "./fs";
 import Spriter, { SpriteBuilder, SpriteResult } from "./Spriter";
 
 export interface PreparedFiles {
@@ -8,7 +7,10 @@ export interface PreparedFiles {
   buf: Buffer;
 }
 
-export async function build(dest: string, needle: string | string[] = []): Promise<void> {
+export async function build(
+  dest: string,
+  needle: string | string[] = [],
+): Promise<void> {
   if (!Array.isArray(needle)) {
     needle = [needle];
   }
@@ -19,8 +21,8 @@ export async function build(dest: string, needle: string | string[] = []): Promi
 
   const spriter = new Spriter(dest);
 
-  const spriteFiles = await Promise.all(needle
-    .map(globPath => attachFiles(globPath, spriter)),
+  const spriteFiles = await Promise.all(
+    needle.map(globPath => attachFiles(globPath, spriter)),
   );
 
   const prepared: PreparedFiles[] = [].concat.apply([], spriteFiles);
@@ -32,14 +34,18 @@ export async function build(dest: string, needle: string | string[] = []): Promi
   return writeFile(path.dirname(target), contents, "utf-8");
 }
 
-export async function attachFiles(globber: string, spriter: SpriteBuilder): Promise<any> {
-  const files = await findFiles(globber);
+export async function attachFiles(
+  globber: string,
+  spriter: SpriteBuilder,
+): Promise<any> {
+  const files = await find(globber);
   if (files.length === 0) {
     throw new Error("No input files found.");
   }
 
-  return Promise.all(files.map(file => {
-    return readFile(path.resolve(file))
-      .then(buf => ({ buf, file }));
-  }));
+  return Promise.all(
+    files.map(file => {
+      return readFile(path.resolve(file)).then(buf => ({ buf, file }));
+    }),
+  );
 }
