@@ -44,10 +44,14 @@
     "sinon": "^2.4.1",
     "ts-node": "^3.3.0",
     "tslint": "^5.5.0",
+    "tslint-config-sevenval": "^0.6.3",
     "typescript": "^2.4.2"
   },
   "nyc": {
-    "include": ["src/*.ts", "src/**/*.ts"],
+    "include": [
+      "src/*.ts",
+      "src/**/*.ts"
+    ],
     "exclude": [
       "typings",
       "node_modules/",
@@ -55,9 +59,19 @@
       "__tests__/**",
       "**/*.d.ts"
     ],
-    "extension": [".ts"],
-    "require": ["ts-node/register"],
-    "reporter": ["json", "html", "text", "text-summary", "lcovonly"],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "json",
+      "html",
+      "text",
+      "text-summary",
+      "lcovonly"
+    ],
     "all": true
   }
 }

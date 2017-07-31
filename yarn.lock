@@ -2199,6 +2199,10 @@ tslib@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.7.1.tgz#bc8004164691923a79fe8378bbeb3da2017538ec"
 
+tslint-config-sevenval@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/tslint-config-sevenval/-/tslint-config-sevenval-0.6.3.tgz#177ed010035ead5af555ec2b8b7829a28456e8f4"
+
 tslint@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.5.0.tgz#10e8dab3e3061fa61e9442e8cee3982acf20a6aa"
