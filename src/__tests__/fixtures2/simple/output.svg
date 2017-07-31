@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="100" height="100"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <symbol viewBox="0 0 100 100" id="input">
+    <g>
+      <title>Layer 1</title>
+      <ellipse ry="21" rx="19" id="svg_1" cy="30" cx="29" stroke-width="5" stroke="#000000" fill="#FF0000"/>
+      <polygon stroke-width="5" stroke="#000000" points="88.53213119506836,60 69.50789642333984,86.18461608886719 38.72603702545166,76.1829833984375 38.72603702545166,43.817020416259766 69.50789642333984,33.81538772583008 88.53213119506836,60 " strokeWidth="5" strokecolor="#000000" fill="#FF0000" edge="32.36596" orient="x" sides="5" shape="regularPoly" id="svg_2" cy="75" cx="35"/>
+    </g>
+  </symbol>
+</svg>
