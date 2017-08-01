@@ -31,6 +31,7 @@
     "commander": "^2.11.0",
     "nicer-fs": "^1.1.1",
     "svg-sprite": "^1.3.7",
+    "vdom-utils": "^0.3.0",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@ import { render, ast2VNode, SVGAst } from "../spriter2";
 async function getFixtures(name: string) {
   const root = path.join(__dirname, "fixtures2");
   const input = await readFile(path.join(root, name, "input.svg"), "utf-8");
-  const output = await readFile(path.join(root, name, "output.svg"), "utf-8");
+  const output = await readFile(path.join(root, name, "output.txt"), "utf-8");
   return { input, output };
 }
 

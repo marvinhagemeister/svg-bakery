@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg width="100" height="100"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="none">
   <symbol viewBox="0 0 100 100" id="input">
     <g>
       <title>Layer 1</title>

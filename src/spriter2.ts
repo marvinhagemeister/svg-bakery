@@ -1,4 +1,5 @@
 import { parseString } from "xml2js";
+import { padStart, escape } from "vdom-utils";
 
 export function parseXml(content: string): Promise<SVGAst> {
   return new Promise((resolve, reject) => {
@@ -92,39 +93,49 @@ export async function buildSvg(contents: string[]): Promise<VNode> {
 
   out.children = trees.map(file => {
     file.tag = "symbol";
+    delete file.props.xmlns;
+    delete file.props["xmlns:svg"];
+    delete file.props.preserveAspectRatio;
     return file;
   });
 
   return out;
 }
 
-export function renderToString(vnode: VNode): string {
+export function renderToString(vnode: VNode, depth: number = 0): string {
   const { tag, props, children } = vnode;
   let out = "<" + tag;
 
   const keys = Object.keys(props);
   if (keys.length > 0) {
-    out += " " + keys.map(key => `${key}="${props[key]}"`).join(" ");
+    out +=
+      " " + keys.map(key => `${escape(key)}="${escape(props[key])}"`).join(" ");
   }
   out += ">\n";
 
   if (children.length > 0) {
-    const res = children.map(child => renderToString(child));
-    console.log(res);
+    const res = (children as any[])
+      .map(child => {
+        if (typeof child === "string") {
+          return escape(child);
+        }
+        return renderToString(child, depth + 1);
+      })
+      .map(item => padStart(item, depth * 2));
+    out += res.join("\n") + "\n";
   }
 
-  out += `</${tag}>`;
+  out += padStart(`</${tag}>`, (depth - 1) * 2);
 
   return out;
 }
 
 export async function render(files: string[]) {
   const nodes = await buildSvg(files);
-
-  console.log(nodes);
+  console.log(JSON.stringify(nodes, null, 2));
 
   let out: string = '<?xml version="1.0" encoding="utf-8"?>\n';
-  out += renderToString(nodes);
+  out += renderToString(nodes, 1) + "\n";
 
   return out;
 }
