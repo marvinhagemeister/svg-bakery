@@ -13,12 +13,12 @@ async function getFixtures(name: string) {
 describe("render", () => {
   it("should render simple", async () => {
     const { input, output } = await getFixtures("simple");
-    const res = await render([input], { mode: "symbol" });
+    const res = await render([input]);
     t.equal(res, output);
   });
 });
 
-describe.only("ast2VNode", () => {
+describe("ast2VNode", () => {
   it("should ", () => {
     const ast: SVGAst = {
       svg: {
@@ -28,17 +28,27 @@ describe.only("ast2VNode", () => {
         },
         g: [
           {
-            title: ["layer1"],
-            ellipse: [],
+            title: ["Layer 1"],
+            ellipse: [
+              {
+                $: {
+                  ry: "21",
+                  rx: "19",
+                  id: "svg_1",
+                  cy: "30",
+                  cx: "29",
+                  "stroke-width": "5",
+                  stroke: "#000000",
+                  fill: "#FF0000",
+                },
+              },
+            ],
           },
         ],
       },
     };
 
-    const res = ast2VNode(ast);
-    console.log("RES", res);
-
-    t.deepEqual(res, {
+    t.deepEqual(ast2VNode(ast), {
       tag: "svg",
       props: {
         width: "100",

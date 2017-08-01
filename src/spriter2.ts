@@ -9,16 +9,6 @@ export function parseXml(content: string): Promise<SVGAst> {
   });
 }
 
-export interface Options {
-  mode: "symbol";
-  addNamespace?: boolean;
-}
-
-const defaultOpts: Options = {
-  mode: "symbol",
-  addNamespace: true,
-};
-
 export interface VNode {
   tag: string;
   props: Record<string, string | number>;
@@ -27,7 +17,7 @@ export interface VNode {
 
 export function createVNode(tag: string): VNode {
   return {
-    tag: "svg",
+    tag,
     props: {},
     children: [],
   };
@@ -51,9 +41,8 @@ export function isRootAst(ast: SVGAst | Ast): ast is SVGAst {
 }
 
 export function ast2VNode(ast: SVGAst | Record<string, Ast>): VNode {
-  const el = Object.keys(ast)[0];
-  const tag = isRootAst(ast) ? "symbol" : el;
-  const obj: Ast = (ast as any)[el];
+  const tag = Object.keys(ast)[0];
+  const obj: Ast = (ast as any)[tag];
 
   const vnode = createVNode(tag);
   if (obj.$ !== undefined) {
@@ -65,78 +54,77 @@ export function ast2VNode(ast: SVGAst | Record<string, Ast>): VNode {
   return vnode;
 }
 
-export function parseChildren(obj: Ast): VNode[] {
-  return Object.keys(obj).filter(key => key !== "$").reduce((prev, key) => {
-    const next: Ast | Ast[] = (obj as any)[key];
+export function parseChildren(obj: Ast): VNode[] | string[] {
+  return Object.keys(obj).filter(key => key !== "$").map(key => {
     const node = createVNode(key);
+    const next: Ast[] = obj[key];
 
-    // const children = next.map(it);
-    if (Array.isArray(next)) {
-      prev = [...prev, ...parseChildren(next)];
-    } else {
-      console.log("foo");
-    }
+    node.children = next.reduce((prev, item) => {
+      if (item !== null && typeof item === "object") {
+        if (item.$ !== undefined) {
+          node.props = item.$;
+        }
 
-    prev.push(node);
-    return prev;
-  }, []);
+        const children = parseChildren(item);
+        prev = [...prev, ...children];
+      } else {
+        prev.push(item);
+      }
+      return prev;
+    }, []);
+    return node;
+  });
 }
 
 export async function buildSvg(contents: string[]): Promise<VNode> {
   const parsed = await Promise.all(contents.map(content => parseXml(content)));
+  const trees = parsed.map(ast => ast2VNode(ast));
+
+  console.log(trees);
 
   const out = createVNode("svg");
   out.props = {
     width: 1000,
     height: 1000,
+    xmlns: "http://www.w3.org/2000/svg",
+    "xmlns:xlink": "http://www.w3.org/1999/xlink",
   };
 
-  out.children = parsed.map(file => {
-    // We need to remove the root svg node.
-    let id = file.svg.$.id;
-    const nodes = Object.keys(file.svg).filter(key => key !== "$").map(key => {
-      const vnode = createVNode(key);
-
-      if (id === undefined && file.svg.title !== undefined) {
-        id = file.svg.title[0];
-      }
-      vnode.props.id = id;
-
-      if (Array.isArray((file as any)[key])) {
-        vnode.children = (file as any)[key];
-      }
-      return vnode;
-    });
-
-    return [].concat.apply([], nodes);
+  out.children = trees.map(file => {
+    file.tag = "symbol";
+    return file;
   });
 
   return out;
 }
 
-export async function render(files: string[], opts: Options) {
-  let out: string = '<?xml version="1.0" encoding="utf-8"?>\n<svg';
+export function renderToString(vnode: VNode): string {
+  const { tag, props, children } = vnode;
+  let out = "<" + tag;
 
-  if (opts.addNamespace) {
-    out +=
-      ' xmlns="http://www.w3.org/2000/svg" ' +
-      'xmlns: xlink = "http://www.w3.org/1999/xlink"';
+  const keys = Object.keys(props);
+  if (keys.length > 0) {
+    out += " " + keys.map(key => `${key}="${props[key]}"`).join(" ");
+  }
+  out += ">\n";
+
+  if (children.length > 0) {
+    const res = children.map(child => renderToString(child));
+    console.log(res);
   }
 
-  const parsed = await Promise.all(files.map(file => parseXml(file)));
+  out += `</${tag}>`;
 
-  if (opts.mode === "symbol") {
-    out += parsed
-      .map(xml => {
-        console.log(xml as any);
+  return out;
+}
 
-        let content = '<symbol viewBox="23 20 50 50" id="allgefahren">';
+export async function render(files: string[]) {
+  const nodes = await buildSvg(files);
 
-        content += "</symbol>";
-        return content;
-      })
-      .join("");
-  }
+  console.log(nodes);
+
+  let out: string = '<?xml version="1.0" encoding="utf-8"?>\n';
+  out += renderToString(nodes);
 
   return out;
 }

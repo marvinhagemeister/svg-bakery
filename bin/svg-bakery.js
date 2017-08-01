@@ -1,0 +1,2 @@
+const { execute } = require('../index');
+
