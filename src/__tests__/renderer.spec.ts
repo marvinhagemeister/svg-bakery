@@ -1,3 +1,4 @@
+import { assert as t } from "chai";
 import * as path from "path";
 import { readFile } from "nicer-fs";
 import { render } from "../renderer";
