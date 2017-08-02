@@ -13,7 +13,8 @@ async function getFixtures(name: string) {
 describe("render", () => {
   it("should render simple", async () => {
     const { input, output } = await getFixtures("simple");
-    const res = await render([input]);
+    const file = { content: input, id: "input" };
+    const res = await render([file]);
     t.equal(res, output);
   });
 });

@@ -77,11 +77,20 @@ export function parseChildren(obj: Ast): VNode[] | string[] {
   });
 }
 
-export async function buildSvg(contents: string[]): Promise<VNode> {
-  const parsed = await Promise.all(contents.map(content => parseXml(content)));
-  const trees = parsed.map(ast => ast2VNode(ast));
+export interface File {
+  id: string;
+  content: string;
+}
 
-  console.log(trees);
+export async function buildSvg(files: File[]): Promise<VNode> {
+  const parsed = await Promise.all(
+    files.map(async file => {
+      const ast = await parseXml(file.content);
+      ast.svg.$.id = file.id;
+      return ast;
+    }),
+  );
+  const trees = parsed.map(ast => ast2VNode(ast));
 
   const out = createVNode("svg");
   out.props = {
@@ -95,7 +104,16 @@ export async function buildSvg(contents: string[]): Promise<VNode> {
     file.tag = "symbol";
     delete file.props.xmlns;
     delete file.props["xmlns:svg"];
+    delete file.props["xmlns:xlink"];
     delete file.props.preserveAspectRatio;
+
+    const { width, height } = file.props;
+    if (width !== undefined && height !== undefined) {
+      file.props.viewBox = `0 0 ${width} ${height}`;
+      delete file.props.width;
+      delete file.props.height;
+    }
+
     return file;
   });
 
@@ -106,11 +124,19 @@ export function renderToString(vnode: VNode, depth: number = 0): string {
   const { tag, props, children } = vnode;
   let out = "<" + tag;
 
-  const keys = Object.keys(props);
-  if (keys.length > 0) {
-    out +=
-      " " + keys.map(key => `${escape(key)}="${escape(props[key])}"`).join(" ");
+  if (props !== null) {
+    const keys = Object.keys(props).sort();
+    if (keys.length > 0) {
+      out +=
+        " " +
+        keys.map(key => `${escape(key)}="${escape(props[key])}"`).join(" ");
+    }
   }
+  if (children.length === 0) {
+    out += "/>";
+    return out;
+  }
+
   out += ">\n";
 
   if (children.length > 0) {
@@ -122,17 +148,16 @@ export function renderToString(vnode: VNode, depth: number = 0): string {
         return renderToString(child, depth + 1);
       })
       .map(item => padStart(item, depth * 2));
-    out += res.join("\n") + "\n";
+    out += res.join("\n");
   }
 
-  out += padStart(`</${tag}>`, (depth - 1) * 2);
+  out += "\n" + padStart(`</${tag}>`, (depth - 1) * 2);
 
   return out;
 }
 
-export async function render(files: string[]) {
+export async function render(files: File[]) {
   const nodes = await buildSvg(files);
-  console.log(JSON.stringify(nodes, null, 2));
 
   let out: string = '<?xml version="1.0" encoding="utf-8"?>\n';
   out += renderToString(nodes, 1) + "\n";
