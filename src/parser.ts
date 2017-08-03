@@ -23,10 +23,6 @@ export interface Ast {
   [index: string]: any;
 }
 
-export function isRootAst(ast: SVGAst | Ast): ast is SVGAst {
-  return (ast as any).svg !== undefined;
-}
-
 export function ast2VNode(ast: SVGAst | Record<string, Ast>): VNode {
   const tag = Object.keys(ast)[0];
   const obj: Ast = (ast as any)[tag];
