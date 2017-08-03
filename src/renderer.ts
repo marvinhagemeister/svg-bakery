@@ -40,18 +40,16 @@ export async function buildSvg(files: File[]): Promise<VNode> {
   return out;
 }
 
-export function renderToString(vnode: VNode, depth: number = 0): string {
+export function renderToString(vnode: VNode, depth: number): string {
   const { tag, props, children } = vnode;
   let out = "<" + tag;
 
-  if (props !== null) {
-    const keys = Object.keys(props).sort();
-    if (keys.length > 0) {
-      out +=
-        " " +
-        keys.map(key => `${escape(key)}="${escape(props[key])}"`).join(" ");
-    }
+  const keys = Object.keys(props).sort();
+  if (keys.length > 0) {
+    out +=
+      " " + keys.map(key => `${escape(key)}="${escape(props[key])}"`).join(" ");
   }
+
   if (children.length === 0) {
     out += "/>";
     return out;
@@ -59,17 +57,15 @@ export function renderToString(vnode: VNode, depth: number = 0): string {
 
   out += ">\n";
 
-  if (children.length > 0) {
-    const res = (children as any[])
-      .map(child => {
-        if (typeof child === "string") {
-          return escape(child);
-        }
-        return renderToString(child, depth + 1);
-      })
-      .map(item => padStart(item, depth * 2));
-    out += res.join("\n");
-  }
+  out += (children as any[])
+    .map(child => {
+      if (typeof child === "string") {
+        return escape(child);
+      }
+      return renderToString(child, depth + 1);
+    })
+    .map(item => padStart(item, depth * 2))
+    .join("\n");
 
   out += "\n" + padStart(`</${tag}>`, (depth - 1) * 2);
 
