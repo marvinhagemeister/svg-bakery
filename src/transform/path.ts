@@ -3,7 +3,7 @@ import { VNode } from "../vnode";
 export type Predicate = <N>(path: Path<N>) => boolean;
 
 export interface Path<T> {
-  parent: VNode<T> | undefined;
+  parent: VNode<any> | undefined;
   node: VNode<T>;
   is(node: any): node is T;
   findParent(precicate: Predicate): void;

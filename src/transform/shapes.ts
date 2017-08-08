@@ -3,9 +3,30 @@ export type CalcMode = "discrete" | "linear" | "paced" | "spline";
 export type RepeatCount = number | "indefinite";
 export type MaskUnits = "userSpaceOnUse" | "objectBoundingBox";
 
+export type AnimationElements =
+  | Animate
+  | AnimateMotion
+  | AnimateTransform
+  | Mpath
+  | Set;
+export type ContainerElements =
+  | A
+  | Defs
+  | G
+  | Marker
+  | Mask
+  | Pattern
+  | Svg
+  | Switch
+  | Symbol;
 export type DescriptiveElements = Desc | Metadata | Title;
+export type GradientElements = LinearGradient | RadialGradient | Stop;
 
-export interface A {}
+export interface A {
+  children: any;
+  href: string;
+  target: any;
+}
 
 export interface Animate {
   attributeName: string;
