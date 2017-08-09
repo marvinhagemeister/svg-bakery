@@ -18,9 +18,71 @@ export type ContainerElements =
   | Pattern
   | Svg
   | Switch
-  | Symbol;
+  | SVGSymbol;
 export type DescriptiveElements = Desc | Metadata | Title;
 export type GradientElements = LinearGradient | RadialGradient | Stop;
+export type FilterElements =
+  | FeBlend
+  | FeColorMatrix
+  | FeComponentTransfer
+  | FeComposite
+  | FeConvolveMatrix
+  | FeDiffuseLighting
+  | FeDisplacementMap
+  | FeDropShadow
+  | FeFlood
+  | FeFuncA
+  | FeFuncB
+  | FeFuncG
+  | FeFuncR
+  | FeGaussianBlur
+  | FeImage
+  | FeMerge
+  | FeMergeNode
+  | FeMorphology
+  | FeOffset
+  | FeSpecularLighting
+  | FeTile
+  | FeTurbulence;
+
+export interface PresentationAttributes {}
+
+export interface TransferAttributes {
+  type: any;
+  tableValues: any;
+  slope: any;
+  intercept: any;
+  amplitude: any;
+  exponent: any;
+  offset: any;
+}
+
+export interface XLinkAttributes {}
+
+export interface ExternalResources {
+  externalResourcesRequired: boolean;
+}
+
+export interface CoreAttributes {
+  id: string;
+  "xml:base": string;
+  "xml:lang": string;
+  "xml:space": string;
+  tabindex: number;
+}
+
+export interface FilterAttributes {
+  height: string;
+  result: FilterElements;
+  width: string;
+  x: number;
+  y: number;
+}
+
+export interface StyleAttributes {
+  class: string;
+  style: string;
+}
 
 export interface A {
   children: any;
@@ -93,27 +155,167 @@ export interface Ellipse {
   children: any;
 }
 
-export interface FeBlend {}
-export interface FeColorMatrix {}
-export interface FeComponentTransfer {}
-export interface FeComposite {}
-export interface FeConvolveMatrix {}
-export interface FeDiffuseLighting {}
+export interface FeBlend {
+  children: Animate | Set;
+  in: string;
+  in2: string;
+  mode: "normal" | "multiply" | "screen" | "darken" | "lighten";
+}
+
+export interface FeColorMatrix {
+  children: Animate | Set;
+  in: string;
+  type: "translate" | "scale" | "rotate" | "skewX" | "skewY";
+  values: string | number;
+}
+
+export interface FeComponentTransfer {
+  children: FeFuncA | FeFuncB | FeFuncG | FeFuncR;
+  in: string;
+}
+
+export interface FeComposite {
+  children: Animate | Set;
+  in: string;
+  in2: string;
+  operator: "over" | "in" | "out" | "atop" | "xor" | "arithmetic";
+  k1: number;
+  k2: number;
+  k3: number;
+  k4: number;
+}
+
+export interface FeConvolveMatrix {
+  children: Animate | Set;
+  in: string;
+  order: number;
+  kernelMatrix: string; // FIXME: of numbers
+  divisor: number;
+  bias: number;
+  targetX: number;
+  targetY: number;
+  edgeMode: "duplicate" | "wrap" | "none";
+  kernelUnitLength: number;
+  preserveAlpha: boolean;
+}
+
+export interface FeDiffuseLighting
+  extends StyleAttributes,
+    FilterAttributes,
+    CoreAttributes,
+    PresentationAttributes {
+  in: string;
+  surfaceScale: number;
+  diffuseConstant: number;
+  kernelUnitLength: number;
+}
+
 export interface FeDisplacementMap {}
 export interface FeDistantLight {}
-export interface FeFlood {}
-export interface FeFuncA {}
-export interface FeFuncB {}
-export interface FeFuncG {}
-export interface FeFuncR {}
-export interface FeGaussianBlur {}
-export interface FeImage {}
-export interface FeMerge {}
-export interface FeMergeNode {}
-export interface FeMorphology {}
-export interface FeOffset {}
-export interface FePointLight {}
+export interface FeDropShadow
+  extends StyleAttributes,
+    FilterAttributes,
+    PresentationAttributes {
+  children: Animate | Script | Set;
+  in: string;
+  stdDeviation: number;
+  dx: number;
+  dy: number;
+}
+
+export interface FeFlood
+  extends CoreAttributes,
+    PresentationAttributes,
+    FilterAttributes,
+    StyleAttributes {
+  floodColor: string;
+  floodOpacity: number;
+}
+
+export interface FeFuncA extends CoreAttributes, TransferAttributes {
+  childern: Animate | Set;
+}
+
+// tslint:disable-next-line:no-empty-interface
+export interface FeFuncB extends FeFuncA {}
+// tslint:disable-next-line:no-empty-interface
+export interface FeFuncG extends FeFuncA {}
+// tslint:disable-next-line:no-empty-interface
+export interface FeFuncR extends FeFuncA {}
+
+export interface FeGaussianBlur
+  extends CoreAttributes,
+    PresentationAttributes,
+    FilterAttributes,
+    StyleAttributes {
+  in: string;
+  stdDeviation: number;
+  edgeMode: "duplicate" | "wrap" | "none";
+}
+
+export interface FeImage
+  extends CoreAttributes,
+    PresentationAttributes,
+    FilterAttributes,
+    XLinkAttributes,
+    StyleAttributes,
+    ExternalResources {
+  preserveAspectRatio: boolean;
+  "xlink:href": string;
+}
+
+export interface FeMerge {
+  children: FeMergeNode;
+}
+
+/**
+ * Takes the result of another filter to be processed by its parent `<feMerge>`
+ */
+export interface FeMergeNode {
+  children: Animate | Set;
+  in: string;
+}
+
+/**
+ * Is used to erode or dilate the input image. It's usefulness lies especially
+ * in fattening or thinning effects.
+ */
+export interface FeMorphology
+  extends CoreAttributes,
+    PresentationAttributes,
+    FilterAttributes,
+    StyleAttributes {
+  children: Animate | Set;
+  in: string;
+  radius: number;
+  operator: "erode" | "dilate";
+}
+
+/**
+ * Allows to offset the input image. The input image as a whole is offset by the
+ * values specified in the dx and dy attributes.
+ */
+export interface FeOffset
+  extends CoreAttributes,
+    PresentationAttributes,
+    FilterAttributes,
+    StyleAttributes {
+  children: Animate | Set;
+  in: string;
+  dx: number;
+  dy: number;
+}
+
+/** Allows to create a point light effect. */
+export interface FePointLight {
+  children: Animate | Set;
+  x: number;
+  y: number;
+  z: number;
+}
+
 export interface FeSpecularLighting {}
+
 export interface FeSpotLight {}
 export interface FeTile {}
 export interface FeTurbulence {}
@@ -285,7 +487,7 @@ export interface Switch {
   children: any;
 }
 
-export interface Symbol {
+export interface SVGSymbol {
   viewBox: string;
   preserveAspectRatio: boolean;
   children: any;

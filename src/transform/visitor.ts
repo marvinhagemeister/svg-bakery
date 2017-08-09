@@ -64,7 +64,7 @@ export interface Visitor<S = {}> {
   style?(path: Path<t.Style>, state: S): void;
   svg?(path: Path<t.Svg>, state: S): void;
   switch?(path: Path<t.Switch>, state: S): void;
-  symbol?(path: Path<t.Symbol>, state: S): void;
+  symbol?(path: Path<t.SVGSymbol>, state: S): void;
   text?(path: Path<t.Text>, state: S): void;
   textPath?(path: Path<t.TextPath>, state: S): void;
   title?(path: Path<t.Title>, state: S): void;
