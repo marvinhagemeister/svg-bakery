@@ -2,6 +2,7 @@ export type Length = number | string;
 export type CalcMode = "discrete" | "linear" | "paced" | "spline";
 export type RepeatCount = number | "indefinite";
 export type MaskUnits = "userSpaceOnUse" | "objectBoundingBox";
+export type ColorChannel = "R" | "G" | "B" | "A";
 
 export type AnimationElements =
   | Animate
@@ -210,8 +211,23 @@ export interface FeDiffuseLighting
   kernelUnitLength: number;
 }
 
-export interface FeDisplacementMap {}
-export interface FeDistantLight {}
+export interface FeDisplacementMap
+  extends CoreAttributes,
+    PresentationAttributes,
+    FilterAttributes {
+  children: Animate | Set;
+  in: string;
+  in2: string;
+  scale: number;
+  xChannelSelector: ColorChannel;
+  yChannelSelector: ColorChannel;
+}
+
+export interface FeDistantLight extends CoreAttributes {
+  azimuth: number;
+  elevation: number;
+}
+
 export interface FeDropShadow
   extends StyleAttributes,
     FilterAttributes,
@@ -319,14 +335,40 @@ export interface FeSpecularLighting {}
 export interface FeSpotLight {}
 export interface FeTile {}
 export interface FeTurbulence {}
-export interface Filter {}
-export interface Font {}
-export interface FontFace {}
-export interface FontFaceFormat {}
-export interface FontFaceName {}
-export interface FontFaceSrc {}
-export interface FontFaceUri {}
-export interface ForeignObject {}
+export interface Filter
+  extends CoreAttributes,
+    PresentationAttributes,
+    XLinkAttributes,
+    StyleAttributes,
+    ExternalResources {
+  children: DescriptiveElements | FilterElements | Animate | Set;
+  x: number;
+  y: number;
+  width: string;
+  height: string;
+  filterRes: any;
+  filterUnits: any;
+  primitiveUnits: any;
+  "xlink:href": string;
+}
+
+// FIXME: interfaces
+/**
+ * Allows for inclusion of a foreign XML namespace which has its graphical
+ * content drawn by a different user agent. The included foreign graphical
+ * content is subject to SVG transformations and compositing.
+ */
+export interface ForeignObject
+  extends CoreAttributes,
+    PresentationAttributes,
+    StyleAttributes,
+    ExternalResources {
+  children: any; // yep
+  x: number;
+  y: number;
+  width: string;
+  height: string;
+}
 
 export interface G {
   children: any;
