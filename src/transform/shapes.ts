@@ -85,6 +85,16 @@ export interface StyleAttributes {
   style: string;
 }
 
+export interface Dimension {
+  width: string;
+  height: string;
+}
+
+export interface Position2D {
+  x: number;
+  y: number;
+}
+
 export interface A {
   children: any;
   href: string;
@@ -340,12 +350,10 @@ export interface Filter
     PresentationAttributes,
     XLinkAttributes,
     StyleAttributes,
-    ExternalResources {
+    ExternalResources,
+    Dimension,
+    Position2D {
   children: DescriptiveElements | FilterElements | Animate | Set;
-  x: number;
-  y: number;
-  width: string;
-  height: string;
   filterRes: any;
   filterUnits: any;
   primitiveUnits: any;
@@ -362,23 +370,17 @@ export interface ForeignObject
   extends CoreAttributes,
     PresentationAttributes,
     StyleAttributes,
-    ExternalResources {
+    ExternalResources,
+    Dimension,
+    Position2D {
   children: any; // yep
-  x: number;
-  y: number;
-  width: string;
-  height: string;
 }
 
 export interface G {
   children: any;
 }
 
-export interface Image {
-  x: number;
-  y: number;
-  width: string;
-  height: string;
+export interface Image extends Dimension, Position2D {
   preserveAspectRatio: boolean;
   children: any;
 }
@@ -412,13 +414,9 @@ export interface Marker {
   children: any;
 }
 
-export interface Mask {
+export interface Mask extends Dimension, Position2D {
   maskUnits: MaskUnits;
   maskContentUnits: MaskUnits;
-  x: number;
-  y: number;
-  width: string;
-  height: string;
 }
 
 export interface Metadata {
@@ -436,14 +434,10 @@ export interface Path {
   children: any;
 }
 
-export interface Pattern {
+export interface Pattern extends Dimension, Position2D {
   patternUnits: any;
   patternContentUnits: any;
   patternTransform: any;
-  x: number;
-  y: number;
-  width: string;
-  height: string;
   preserveAspectRatio: boolean;
   children: any;
 }
@@ -471,11 +465,7 @@ export interface RadialGradient {
   children: any;
 }
 
-export interface Rect {
-  x: number;
-  y: number;
-  width: string;
-  height: string;
+export interface Rect extends Dimension, Position2D {
   rx: number;
   ry: number;
   children: DescriptiveElements | AnimationElements;
@@ -503,13 +493,9 @@ export interface Style {
   children: any; // yep
 }
 
-export interface Svg {
+export interface Svg extends Dimension, Position2D {
   version: string;
   baseProfile: string;
-  x: number;
-  y: number;
-  width: string;
-  height: string;
   preserveAspectRatio: boolean;
   contentScriptType: any;
   contentStyleType: any;
@@ -517,9 +503,7 @@ export interface Svg {
   children: any;
 }
 
-export interface Switch {
-  x: number;
-  y: number;
+export interface Switch extends Position2D {
   dx: number;
   dy: number;
   textAnchor: any;
@@ -546,10 +530,8 @@ export interface TextPath {
 export interface Title {
   children: any; // yep
 }
-export interface TSpan {
+export interface TSpan extends Position2D {
   children: any;
-  x: number;
-  y: number;
   dx: number;
   dy: number;
   rotate: string;
@@ -557,12 +539,8 @@ export interface TSpan {
   lengthAdjust: any;
 }
 
-export interface Use {
+export interface Use extends Dimension, Position2D {
   children: any;
-  x: number;
-  y: number;
-  width: string;
-  height: string;
   href: string;
 }
 
