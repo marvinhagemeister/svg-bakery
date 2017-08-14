@@ -1,37 +1,40 @@
-import { VNode } from "../vnode";
+import { PropsTagNameMap } from "./shapes";
+import { Visitor } from "./visitor";
 
-export type Predicate = <N>(path: Node<N>) => boolean;
+export type Predicate = <N extends keyof PropsTagNameMap>(
+  path: Node<N>,
+) => boolean;
 
-export interface Path {
-  append(node: Node): this;
-  prepend(node: Node): this;
-  findParent(precicate: Predicate): Node | undefined;
-  findChildren(predicate: Predicate): Node[];
-  find(predicate: Predicate): Node[];
-  replace(node: Node): void;
-  insertBefore(node: Node): this;
-  insertAfter(node: Node): this;
-  remove(): this;
-}
-
-export interface NodeBase<P extends Props = {}> {
+export interface Path<T extends keyof PropsTagNameMap> {
   parent: Node | undefined;
   children: Node[];
-  tag: string;
-  props: P;
+  tag: T;
+  props: Partial<PropsTagNameMap[T]>;
+  append(node: Node<T>): this;
+  prepend(node: Node<T>): this;
+  findParent(precicate: Predicate): Node<T> | undefined;
+  findChildren(predicate: Predicate): Array<Node<T>>;
+  find(predicate: Predicate): Array<Node<T>>;
+  replace(node: Node<T>): void;
+  insertBefore(node: Node<T>): this;
+  insertAfter(node: Node<T>): this;
+  remove(): this;
 }
 
 export interface Props extends Record<string, any> {
   key?: string;
 }
 
-export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
-  props: P;
+export default class Node<T extends keyof PropsTagNameMap = any>
+  implements Path<T> {
   parent: Node | undefined;
   children: Node[];
 
-  constructor(public tag: string, props?: P, children: Node[] = []) {
-    this.props = props;
+  constructor(
+    public tag: T,
+    public props: Partial<PropsTagNameMap[T]> = {},
+    children: Node[] = [],
+  ) {
     this.children = children.map(child => {
       child.parent = this;
       return child;
@@ -105,7 +108,7 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
     return this;
   }
 
-  replace(node: Node, keepChildren: boolean = false) {
+  replace(node: Node, keepChildren: boolean = false): Node {
     if (this.parent === undefined) {
       if (keepChildren) {
         node.children = this.children;
@@ -136,8 +139,6 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
     return this;
   }
 
-  // TODO: Switch `Node` to a double linked list structure to remove
-  // this loop. Should give a slight performance boost.
   private _parentIdx(): number {
     return this.parent.children.findIndex(item => item === this);
   }

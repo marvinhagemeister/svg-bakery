@@ -1,16 +1,19 @@
 import { padStart, escape } from "vdom-utils";
 import { File, parseXml, ast2VNode } from "./parser";
-import { VNode, createVNode } from "./vnode";
+import Node from "./transform/Node";
 import { buildSvg } from "./modes/symbol";
 
-export function renderToString(vnode: VNode, depth: number): string {
-  const { tag, props, children } = vnode;
+export function renderToString(node: Node, depth: number): string {
+  const { tag, props, children } = node;
   let out = "<" + tag;
 
   const keys = Object.keys(props).sort();
   if (keys.length > 0) {
     out +=
-      " " + keys.map(key => `${escape(key)}="${escape(props[key])}"`).join(" ");
+      " " +
+      keys
+        .map(key => `${escape(key)}="${escape((props as any)[key])}"`)
+        .join(" ");
   }
 
   if (children.length === 0) {

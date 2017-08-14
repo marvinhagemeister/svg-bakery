@@ -4,6 +4,14 @@ export type RepeatCount = number | "indefinite";
 export type MaskUnits = "userSpaceOnUse" | "objectBoundingBox";
 export type ColorChannel = "R" | "G" | "B" | "A";
 
+export interface ViewBox {
+  /**
+   * Specify that a given set of graphics stretch to fit a particular container
+   * element. Format: list of four numbers `min-x min-y width height`.
+   */
+  viewBox: string;
+}
+
 export type AnimationElements =
   | Animate
   | AnimateMotion
@@ -46,6 +54,71 @@ export type FilterElements =
   | FeTile
   | FeTurbulence;
 
+export interface PropsTagNameMap {
+  a: A;
+  animate: Animate;
+  animateMotion: AnimateMotion;
+  animateTransform: AnimateTransform;
+  circle: Circle;
+  colorProfile: ColorProfile;
+  defs: Defs;
+  desc: Desc;
+  ellipse: Ellipse;
+  feBlend: FeBlend;
+  feColorMatrix: FeColorMatrix;
+  feComponentTransfer: FeComponentTransfer;
+  feComposite: FeComposite;
+  feConvolveMatrix: FeConvolveMatrix;
+  feDiffuseLighting: FeDiffuseLighting;
+  feDisplacementMap: FeDisplacementMap;
+  feDistantLight: FeDistantLight;
+  feFlood: FeFlood;
+  feFuncA: FeFuncA;
+  feFuncB: FeFuncB;
+  feFuncG: FeFuncG;
+  feFuncR: FeFuncR;
+  feGaussianBlur: FeGaussianBlur;
+  feImage: FeImage;
+  feMerge: FeMerge;
+  feMergeNode: FeMergeNode;
+  feMorphology: FeMorphology;
+  feOffset: FeOffset;
+  fePointLight: FePointLight;
+  feSpecularLighting: FeSpecularLighting;
+  feSpotLight: FeSpotLight;
+  feTile: FeTile;
+  feTurbulence: FeTurbulence;
+  filter: Filter;
+  foreignObject: ForeignObject;
+  g: G;
+  image: Image;
+  line: Line;
+  linearGradient: LinearGradient;
+  marker: Marker;
+  mask: Mask;
+  metadata: Metadata;
+  mpath: Mpath;
+  path: Path;
+  pattern: Pattern;
+  polygon: Polygon;
+  polyline: Polyline;
+  radialGradient: RadialGradient;
+  rect: Rect;
+  script: Script;
+  set: Set;
+  stop: Stop;
+  style: Style;
+  svg: Svg;
+  switch: Switch;
+  symbol: SVGSymbol;
+  text: Text;
+  textNode: TextEvent;
+  title: Title;
+  tspan: TSpan;
+  use: Use;
+  view: View;
+}
+
 export interface PresentationAttributes {}
 
 export interface TransferAttributes {
@@ -86,8 +159,8 @@ export interface StyleAttributes {
 }
 
 export interface Dimension {
-  width: string;
-  height: string;
+  width: string | number;
+  height: string | number;
 }
 
 export interface Position2D {
@@ -493,14 +566,15 @@ export interface Style {
   children: any; // yep
 }
 
-export interface Svg extends Dimension, Position2D {
+export interface Svg extends Dimension, Position2D, ViewBox {
   version: string;
   baseProfile: string;
   preserveAspectRatio: boolean;
   contentScriptType: any;
   contentStyleType: any;
-  viewBox: string;
   children: any;
+  xmlns: "http://www.w3.org/2000/svg";
+  "xmlns:xlink": "http://www.w3.org/1999/xlink";
 }
 
 export interface Switch extends Position2D {
@@ -513,8 +587,7 @@ export interface Switch extends Position2D {
   children: any;
 }
 
-export interface SVGSymbol {
-  viewBox: string;
+export interface SVGSymbol extends ViewBox {
   preserveAspectRatio: boolean;
   children: any;
 }
@@ -544,9 +617,8 @@ export interface Use extends Dimension, Position2D {
   href: string;
 }
 
-export interface View {
+export interface View extends ViewBox {
   children: any;
-  viewBox: string;
   preserveAspectRatio: boolean;
   zoomAndPan: any;
   viewTarget: any;

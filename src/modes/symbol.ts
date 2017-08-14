@@ -1,8 +1,8 @@
 import { padStart, escape } from "vdom-utils";
 import { File, parseXml, ast2VNode } from "../parser";
-import { VNode, createVNode } from "../vnode";
+import Node from "../transform/Node";
 
-export async function buildSvg(files: File[]): Promise<VNode> {
+export async function buildSvg(files: File[]): Promise<Node<"svg">> {
   const parsed = await Promise.all(
     files.map(async file => {
       const ast = await parseXml(file.content);
@@ -12,7 +12,7 @@ export async function buildSvg(files: File[]): Promise<VNode> {
   );
   const trees = parsed.map(ast => ast2VNode(ast));
 
-  const out = createVNode("svg");
+  const out = new Node("svg");
   out.props = {
     width: 1000,
     height: 1000,

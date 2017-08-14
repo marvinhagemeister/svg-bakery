@@ -4,30 +4,34 @@ import Node from "../Node";
 describe("Node", () => {
   describe("constructor", () => {
     it("should instantiate", () => {
-      const n1 = new Node("foo");
-      t.equal(n1.tag, "foo");
+      const n1 = new Node("svg");
+      t.equal(n1.tag, "svg");
 
-      const n2 = new Node("bar", { class: "foo" });
-      t.deepEqual(n2.props, {
-        class: "foo",
-      });
+      // FIXME: Types
+      const n2 = new Node("svg", { class: "foo" } as any);
+      t.deepEqual(
+        n2.props,
+        {
+          class: "foo",
+        } as any,
+      );
     });
 
     it("should create child nodes from array", () => {
-      const node = new Node("foo", {}, [new Node("bar"), new Node("boof")]);
+      const node = new Node("svg", {}, [new Node("g"), new Node("ellipse")]);
       t.equal(node.children.length, 2);
-      t.equal(node.children[0].tag, "bar");
-      t.equal(node.children[1].tag, "boof");
+      t.equal(node.children[0].tag, "g");
+      t.equal(node.children[1].tag, "ellipse");
     });
   });
 
   describe("remove()", () => {
     it("should remove node", () => {
-      const tree = new Node("foo");
-      const child = new Node("child");
+      const tree = new Node("g");
+      const child = new Node("circle");
       tree.append(child);
 
-      t.equal(child.parent.tag, "foo");
+      t.equal(child.parent.tag, "g");
 
       child.remove();
       t.equal(child.parent, undefined);
@@ -37,13 +41,13 @@ describe("Node", () => {
 
   describe("findParent()", () => {
     it("should findParent()", () => {
-      const tree = new Node("foo", {});
-      const child = new Node("child", {});
+      const tree = new Node("g", {});
+      const child = new Node("path", {});
       tree.append(child);
 
-      const res = child.findParent(node => node.tag === "foo");
+      const res = child.findParent(node => node.tag === "g");
       t.equal(res instanceof Node, true);
-      t.equal(res.tag, "foo");
+      t.equal(res.tag, "g");
 
       const res2 = child.findParent(node => node.tag === "nope");
       t.equal(res2, undefined);
@@ -52,22 +56,22 @@ describe("Node", () => {
 
   describe("replace()", () => {
     it("should work node = root", () => {
-      const tree = new Node("foo");
-      const root = new Node("root");
-      const child = new Node("child");
+      const tree = new Node("svg");
+      const root = new Node("g");
+      const child = new Node("circle");
       tree.append(child);
 
       const res = tree.replace(root);
 
-      t.equal(res.tag, "root");
+      t.equal(res.tag, "g");
       t.equal(res.children.length, 0);
     });
 
     it("should replace node with parent", () => {
-      const root = new Node("root");
-      const tree = new Node("foo");
-      const child = new Node("child");
-      const child2 = new Node("child2");
+      const root = new Node("svg");
+      const tree = new Node("g");
+      const child = new Node("circle");
+      const child2 = new Node("ellipse");
 
       tree.append(child);
       child.append(child2);
@@ -77,50 +81,50 @@ describe("Node", () => {
     });
 
     it("should keep children", () => {
-      const root = new Node("root");
-      const tree = new Node("foo");
-      const child = new Node("child");
-      const child2 = new Node("child2");
+      const root = new Node("svg");
+      const tree = new Node("g");
+      const child = new Node("circle");
+      const child2 = new Node("ellipse");
 
       tree.append(child);
       child.append(child2);
       tree.replace(root, true);
 
       t.equal(root.children.length, 1);
-      t.equal(root.children[0].tag, "child");
+      t.equal(root.children[0].tag, "circle");
     });
   });
 
   describe("find()", () => {
     it("should find all instances of element", () => {
-      const root = new Node("foo", {}, [
-        new Node("bar"),
-        new Node("baz", {}, [new Node("bar")]),
+      const root = new Node("svg", {}, [
+        new Node("circle"),
+        new Node("ellipse", {}, [new Node("ellipse")]),
       ]);
-      const res = root.find(node => node.tag === "bar");
+      const res = root.find(node => node.tag === "ellipse");
 
       t.equal(res.length, 2);
-      t.equal(res[0].tag, "bar");
+      t.equal(res[0].tag, "ellipse");
     });
   });
 
   describe("findChildren()", () => {
     it("should find child", () => {
-      const root = new Node("foo", {}, [
-        new Node("bar"),
-        new Node("baz", {}, [new Node("bar")]),
+      const root = new Node("svg", {}, [
+        new Node("circle"),
+        new Node("ellipse", {}, [new Node("text")]),
       ]);
-      const res = root.findChildren(node => node.tag === "bar");
+      const res = root.findChildren(node => node.tag === "circle");
 
       t.equal(res.length, 1);
-      t.equal(res[0].tag, "bar");
+      t.equal(res[0].tag, "circle");
     });
   });
 
   describe("append()", () => {
     it("should append children", () => {
-      const root = new Node("foo", {}, [new Node("baz")]);
-      const child = new Node("child");
+      const root = new Node("svg", {}, [new Node("circle")]);
+      const child = new Node("circle");
 
       root.append(child, child);
       t.equal(root.children.length, 3);
@@ -131,8 +135,8 @@ describe("Node", () => {
 
   describe("prepend()", () => {
     it("should prepend children", () => {
-      const root = new Node("foo", {}, [new Node("baz")]);
-      const child = new Node("child");
+      const root = new Node("svg", {}, [new Node("circle")]);
+      const child = new Node("circle");
 
       root.prepend(child, child);
       t.equal(root.children.length, 3);

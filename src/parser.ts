@@ -1,5 +1,5 @@
 import { parseString } from "xml2js";
-import { VNode, createVNode } from "./vnode";
+import Node from "./transform/Node";
 
 export function parseXml(content: string): Promise<SVGAst> {
   return new Promise((resolve, reject) => {
@@ -23,23 +23,23 @@ export interface Ast {
   [index: string]: any;
 }
 
-export function ast2VNode(ast: SVGAst | Record<string, Ast>): VNode {
+export function ast2VNode(ast: SVGAst | Record<string, Ast>): Node<any> {
   const tag = Object.keys(ast)[0];
   const obj: Ast = (ast as any)[tag];
 
-  const vnode = createVNode(tag);
+  const node = new Node(tag as any);
   if (obj.$ !== undefined) {
-    vnode.props = obj.$;
+    node.props = obj.$;
   }
 
-  vnode.children = parseChildren(obj) as any;
+  node.children = parseChildren(obj) as any;
 
-  return vnode;
+  return node;
 }
 
-export function parseChildren(obj: Ast): VNode[] | string[] {
+export function parseChildren(obj: Ast): Array<Node<any>> {
   return Object.keys(obj).filter(key => key !== "$").map(key => {
-    const node = createVNode(key);
+    const node = new Node(key as any);
     const next: Ast[] = obj[key];
 
     node.children = next.reduce((prev, item) => {
