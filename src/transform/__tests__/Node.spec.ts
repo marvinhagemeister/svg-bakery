@@ -25,8 +25,8 @@ describe("Node", () => {
 
   describe("remove()", () => {
     it("should remove node", () => {
-      const tree = new Node("foo", {});
-      const child = new Node("child", {});
+      const tree = new Node("foo");
+      const child = new Node("child");
       tree.append(child);
 
       t.equal(child.parent.tag, "foo");

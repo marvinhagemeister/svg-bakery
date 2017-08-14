@@ -4,7 +4,6 @@ export type Predicate = <N>(path: Node<N>) => boolean;
 
 export interface Path {
   append(node: Node): this;
-  is(tag: string): boolean;
   findParent(precicate: Predicate): Node | undefined;
   findChildren(predicate: Predicate): Node[];
   find(predicate: Predicate): Node[];
@@ -45,10 +44,6 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
 
     this.children.push(...nodes);
     return this;
-  }
-
-  is(tag: string) {
-    return this.tag === tag;
   }
 
   find(predicate: Predicate): Node[] {
@@ -131,6 +126,8 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
     return this;
   }
 
+  // TODO: Switch `Node` to a double linked list structure to remove
+  // this loop. Should give a slight performance boost.
   private _parentIdx(): number {
     return this.parent.children.findIndex(item => item === this);
   }
