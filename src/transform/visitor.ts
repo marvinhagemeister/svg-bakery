@@ -37,12 +37,6 @@ export interface Visitor<S = {}> {
   feTile?(path: Path<t.FeTile>, state: S): void;
   feTurbulence?(path: Path<t.FeTurbulence>, state: S): void;
   filter?(path: Path<t.Filter>, state: S): void;
-  font?(path: Path<t.Font>, state: S): void;
-  fontFace?(path: Path<t.FontFace>, state: S): void;
-  fontFaceFormat?(path: Path<t.FontFaceFormat>, state: S): void;
-  fontFaceName?(path: Path<t.FontFaceName>, state: S): void;
-  fontFaceSrc?(path: Path<t.FontFaceSrc>, state: S): void;
-  fontFaceUri?(path: Path<t.FontFaceUri>, state: S): void;
   foreignObject?(path: Path<t.ForeignObject>, state: S): void;
   g?(path: Path<t.G>, state: S): void;
   image?(path: Path<t.Image>, state: S): void;
