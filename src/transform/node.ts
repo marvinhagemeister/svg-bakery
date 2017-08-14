@@ -4,6 +4,7 @@ export type Predicate = <N>(path: Node<N>) => boolean;
 
 export interface Path {
   append(node: Node): this;
+  prepend(node: Node): this;
   findParent(precicate: Predicate): Node | undefined;
   findChildren(predicate: Predicate): Node[];
   find(predicate: Predicate): Node[];
@@ -43,6 +44,15 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
     }
 
     this.children.push(...nodes);
+    return this;
+  }
+
+  prepend(...nodes: Node[]) {
+    for (const node of nodes) {
+      node.parent = this;
+    }
+
+    this.children.unshift(...nodes);
     return this;
   }
 

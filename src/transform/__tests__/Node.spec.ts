@@ -11,8 +11,6 @@ describe("Node", () => {
       t.deepEqual(n2.props, {
         class: "foo",
       });
-      // TODO: Add support for string children
-      // const n2 = new Node("foo", {}, ["foo"]);
     });
 
     it("should create child nodes from array", () => {
@@ -116,6 +114,30 @@ describe("Node", () => {
 
       t.equal(res.length, 1);
       t.equal(res[0].tag, "bar");
+    });
+  });
+
+  describe("append()", () => {
+    it("should append children", () => {
+      const root = new Node("foo", {}, [new Node("baz")]);
+      const child = new Node("child");
+
+      root.append(child, child);
+      t.equal(root.children.length, 3);
+      t.strictEqual(root.children[1], child);
+      t.strictEqual(root.children[2], child);
+    });
+  });
+
+  describe("prepend()", () => {
+    it("should prepend children", () => {
+      const root = new Node("foo", {}, [new Node("baz")]);
+      const child = new Node("child");
+
+      root.prepend(child, child);
+      t.equal(root.children.length, 3);
+      t.strictEqual(root.children[0], child);
+      t.strictEqual(root.children[1], child);
     });
   });
 });
