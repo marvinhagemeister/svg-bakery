@@ -4,6 +4,7 @@ export type Predicate = <N>(path: Node<N>) => boolean;
 
 export interface Path {
   append(node: Node): this;
+  prepend(node: Node): this;
   findParent(precicate: Predicate): Node | undefined;
   findChildren(predicate: Predicate): Node[];
   find(predicate: Predicate): Node[];
@@ -15,7 +16,8 @@ export interface Path {
 
 export interface NodeBase<P extends Props = {}> {
   parent: Node | undefined;
-  children: Node[];
+  next: Node | undefined;
+  prev: Node | undefined;
   tag: string;
   props: P;
 }
@@ -27,44 +29,85 @@ export interface Props extends Record<string, any> {
 export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
   props: P;
   parent: Node | undefined;
-  children: Node[];
+  next: Node | undefined;
+  prev: Node | undefined;
+  firstChild: Node | undefined;
+  lastChild: Node | undefined;
 
   constructor(public tag: string, props?: P, children: Node[] = []) {
     this.props = props;
-    this.children = children.map(child => {
+    children.forEach((child, i) => {
       child.parent = this;
-      return child;
+
+      if (i === 0) {
+        this.firstChild = child;
+        if (children.length === 1) {
+          this.lastChild = child;
+        }
+      } else {
+        const prev = children[i - 1];
+        child.prev = prev;
+        prev.next = child;
+
+        if (i === children.length - 1) {
+          this.lastChild = child;
+        }
+      }
     });
   }
 
   append(...nodes: Node[]) {
-    for (const node of nodes) {
-      node.parent = this;
-    }
+    nodes.forEach((node, i) => {
+      if (i === 0) {
+        if (this.lastChild === undefined) {
+          this.firstChild = node;
+        }
+      } else {
+        this.lastChild.next = node;
+        node.prev = this.lastChild;
+      }
 
-    this.children.push(...nodes);
+      this.lastChild = node;
+      node.parent = this;
+    });
+
+    return this;
+  }
+
+  prepend(...nodes: Node[]) {
     return this;
   }
 
   find(predicate: Predicate): Node[] {
-    const result: Node[] = [];
-    for (const child of this.children) {
-      if (predicate(child)) {
-        result.push(child);
-      }
+    if (this.firstChild === undefined) {
+      return [];
+    }
 
-      result.push(...child.find(predicate));
+    const result: Node[] = [];
+    let node = this.firstChild;
+    while (node.next !== undefined) {
+      if (predicate(node)) {
+        result.push(node);
+      }
+      result.push(...node.find(predicate));
+      node = node.next;
     }
 
     return result;
   }
 
   findChildren(predicate: Predicate) {
+    if (this.firstChild === undefined) {
+      return [];
+    }
+
     const result: Node[] = [];
-    for (const child of this.children) {
-      if (predicate(child)) {
-        result.push(child);
+    let node = this.firstChild;
+    while (node.next !== undefined) {
+      if (predicate(node)) {
+        result.push(node);
       }
+      node = node.next;
     }
 
     return result;
@@ -82,14 +125,18 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
   }
 
   remove() {
-    if (this.parent === undefined) {
-      return;
+    if (this.prev !== undefined) {
+      this.prev.next = this.next;
     }
 
-    const idx = this._parentIdx();
-    if (idx !== undefined) {
-      this.parent.children.splice(idx, 1);
-      this.parent = undefined;
+    if (this.next !== undefined) {
+      this.next.prev = this.prev !== undefined ? this.prev : undefined;
+    }
+
+    if (this.parent === undefined) {
+      return;
+    } else if (this.parent.firstChild === this) {
+      this.parent.firstChild = undefined;
     }
 
     return this;
@@ -98,37 +145,24 @@ export default class Node<P extends Props = {}> implements Path, NodeBase<P> {
   replace(node: Node, keepChildren: boolean = false) {
     if (this.parent === undefined) {
       if (keepChildren) {
-        node.children = this.children;
+        node.firstChild = this.firstChild;
       }
       return node;
     }
 
-    const idx = this._parentIdx();
-    this.parent.children[idx] = node;
     return this;
   }
 
   insertBefore(node: Node) {
-    const idx = this._parentIdx();
-    if (idx !== undefined) {
-      this.parent.children.splice(idx, 0, node);
-    }
-
+    node.next = this;
+    node.prev = this.prev;
+    this.prev = node;
     return this;
   }
 
   insertAfter(node: Node) {
-    const idx = this._parentIdx();
-    if (idx !== undefined) {
-      this.parent.children.splice(idx + 1, 0, node);
-    }
-
+    node.next = this.next;
+    this.next = node;
     return this;
-  }
-
-  // TODO: Switch `Node` to a double linked list structure to remove
-  // this loop. Should give a slight performance boost.
-  private _parentIdx(): number {
-    return this.parent.children.findIndex(item => item === this);
   }
 }

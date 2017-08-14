@@ -11,29 +11,64 @@ describe("Node", () => {
       t.deepEqual(n2.props, {
         class: "foo",
       });
-      // TODO: Add support for string children
-      // const n2 = new Node("foo", {}, ["foo"]);
+    });
+
+    it("should set firstChild and lastChild with one child", () => {
+      const child = new Node("bar");
+      const node = new Node("foo", {}, [child]);
+
+      t.strictEqual(node.firstChild, child);
+      t.strictEqual(node.lastChild, child);
+    });
+
+    it("should set firstChild and lastChild with multiple children", () => {
+      const child1 = new Node("bar");
+      const child2 = new Node("baz");
+      const node = new Node("foo", {}, [child1, child2]);
+
+      t.strictEqual(node.firstChild, child1);
+      t.strictEqual(node.lastChild, child2);
     });
 
     it("should create child nodes from array", () => {
-      const node = new Node("foo", {}, [new Node("bar"), new Node("boof")]);
-      t.equal(node.children.length, 2);
-      t.equal(node.children[0].tag, "bar");
-      t.equal(node.children[1].tag, "boof");
+      const child1 = new Node("bar");
+      const child2 = new Node("baz");
+      const child3 = new Node("boof");
+      const node = new Node("foo", {}, [child1, child2, child3]);
+
+      t.strictEqual(node.firstChild, child1);
+      t.strictEqual(node.lastChild, child3);
+      t.strictEqual(node.firstChild, child1);
+      t.strictEqual(child1.next, child2);
+      t.strictEqual(child2.next, child3);
+      t.equal(child3.next, undefined);
     });
   });
 
   describe("remove()", () => {
-    it("should remove node", () => {
+    it("should work with no children", () => {
       const tree = new Node("foo");
+      tree.remove();
+    });
+
+    it("should remove itself from parent", () => {
       const child = new Node("child");
-      tree.append(child);
+      const tree = new Node("foo", {}, [child]);
 
-      t.equal(child.parent.tag, "foo");
-
+      t.strictEqual(tree.firstChild, child);
       child.remove();
-      t.equal(child.parent, undefined);
-      t.equal(tree.children.length, 0);
+
+      t.equal(tree.firstChild, undefined);
+    });
+
+    it("should remove node when parent has multiple children", () => {
+      const child1 = new Node("child1");
+      const child2 = new Node("child2");
+      const tree = new Node("foo", {}, [child1, child2]);
+
+      child1.remove();
+
+      t.equal(tree.firstChild, child2);
     });
   });
 
@@ -62,7 +97,7 @@ describe("Node", () => {
       const res = tree.replace(root);
 
       t.equal(res.tag, "root");
-      t.equal(res.children.length, 0);
+      // t.equal(res.children.length, 0);
     });
 
     it("should replace node with parent", () => {
@@ -75,7 +110,7 @@ describe("Node", () => {
       child.append(child2);
       child.replace(root);
 
-      t.equal(root.children.length, 0);
+      // t.equal(root.children.length, 0);
     });
 
     it("should keep children", () => {
@@ -88,8 +123,8 @@ describe("Node", () => {
       child.append(child2);
       tree.replace(root, true);
 
-      t.equal(root.children.length, 1);
-      t.equal(root.children[0].tag, "child");
+      // t.equal(root.children.length, 1);
+      // t.equal(root.children[0].tag, "child");
     });
   });
 
