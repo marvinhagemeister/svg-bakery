@@ -31,39 +31,42 @@ describe("ast2VNode", () => {
       },
     };
 
-    t.deepEqual(ast2VNode(ast), {
-      tag: "svg",
-      props: {
-        width: "100",
-        height: "100",
-      },
-      children: [
-        {
-          tag: "g",
-          props: {},
-          children: [
-            {
-              tag: "title",
-              props: {},
-              children: ["Layer 1"],
-            },
-            {
-              tag: "ellipse",
-              props: {
-                ry: "21",
-                rx: "19",
-                id: "svg_1",
-                cy: "30",
-                cx: "29",
-                "stroke-width": "5",
-                stroke: "#000000",
-                fill: "#FF0000",
-              },
-              children: [],
-            },
-          ],
+    t.deepEqual(
+      ast2VNode(ast),
+      {
+        tag: "svg",
+        props: {
+          width: "100",
+          height: "100",
         },
-      ],
-    });
+        children: [
+          {
+            tag: "g",
+            props: {},
+            children: [
+              {
+                tag: "title",
+                props: {},
+                children: ["Layer 1"],
+              },
+              {
+                tag: "ellipse",
+                props: {
+                  ry: "21",
+                  rx: "19",
+                  id: "svg_1",
+                  cy: "30",
+                  cx: "29",
+                  "stroke-width": "5",
+                  stroke: "#000000",
+                  fill: "#FF0000",
+                },
+                children: [],
+              },
+            ],
+          },
+        ],
+      } as any,
+    );
   });
 });

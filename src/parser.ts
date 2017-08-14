@@ -32,7 +32,7 @@ export function ast2VNode(ast: SVGAst | Record<string, Ast>): VNode {
     vnode.props = obj.$;
   }
 
-  vnode.children = parseChildren(obj);
+  vnode.children = parseChildren(obj) as any;
 
   return vnode;
 }
