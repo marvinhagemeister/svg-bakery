@@ -2,10 +2,7 @@ import Node from "./node";
 import { PropsTagNameMap } from "./shapes";
 
 export type Visitor<S = {}> = {
-  [key in keyof PropsTagNameMap]?: (
-    node: PropsTagNameMap[key],
-    state: S,
-  ) => void
+  [key in keyof PropsTagNameMap]?: (node: Node<key>, state: S) => void
 };
 
 export function traverse(node: Node, visitor: Visitor): Node {
@@ -16,7 +13,11 @@ export function traverse(node: Node, visitor: Visitor): Node {
   return visit(node, visitor, {});
 }
 
-function visit(node: Node, visitor: Visitor, state: object): Node {
+function visit<T extends keyof PropsTagNameMap>(
+  node: Node<T>,
+  visitor: Visitor,
+  state: object,
+): Node {
   const fn = (visitor as any)[node.tag];
   if (fn !== undefined) {
     fn(node, state);
