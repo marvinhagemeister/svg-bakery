@@ -11,7 +11,7 @@ export function plugin() {
       delete props.preserveAspectRatio;
 
       const symbol = new Node("symbol", props, node.children);
-      node.replace(symbol);
+      node.replaceWith(symbol);
     },
   };
 
