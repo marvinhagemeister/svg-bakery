@@ -20,6 +20,7 @@ export interface Path<T extends keyof PropsTagNameMap> {
   insertAfter(node: Node<T>): this;
   remove(): this;
   hasProps(): boolean;
+  hasChildren(): boolean;
 }
 
 export interface Props extends Record<string, any> {
@@ -142,6 +143,10 @@ export default class Node<T extends keyof PropsTagNameMap = any>
 
   hasProps() {
     return Object.keys(this.props).length > 0;
+  }
+
+  hasChildren() {
+    return Object.keys(this.children).length > 0;
   }
 
   private _parentIdx(): number {

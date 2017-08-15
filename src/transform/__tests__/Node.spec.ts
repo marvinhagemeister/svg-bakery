@@ -155,4 +155,15 @@ describe("Node", () => {
       t.equal(n.hasProps(), true);
     });
   });
+
+  describe("hasChildren()", () => {
+    it("should check if Node has children", () => {
+      const n = new Node("svg");
+
+      t.equal(n.hasChildren(), false);
+
+      n.children = [new Node("g")];
+      t.equal(n.hasChildren(), true);
+    });
+  });
 });
