@@ -144,4 +144,15 @@ describe("Node", () => {
       t.strictEqual(root.children[1], child);
     });
   });
+
+  describe("hasProps()", () => {
+    it("should check if Node has props", () => {
+      const n = new Node("svg");
+
+      t.equal(n.hasProps(), false);
+
+      n.props = { height: "bar" };
+      t.equal(n.hasProps(), true);
+    });
+  });
 });
