@@ -15,7 +15,7 @@ export interface Path<T extends keyof PropsTagNameMap> {
   findParent(precicate: Predicate): Node<T> | undefined;
   findChildren(predicate: Predicate): Array<Node<T>>;
   find(predicate: Predicate): Array<Node<T>>;
-  replace(node: Node<T>): void;
+  replaceWith(node: Node<T>): void;
   insertBefore(node: Node<T>): this;
   insertAfter(node: Node<T>): this;
   remove(): this;
@@ -108,7 +108,7 @@ export default class Node<T extends keyof PropsTagNameMap = any>
     return this;
   }
 
-  replace(node: Node, keepChildren: boolean = false): Node {
+  replaceWith(node: Node, keepChildren: boolean = false): Node {
     if (this.parent === undefined) {
       if (keepChildren) {
         node.children = this.children;

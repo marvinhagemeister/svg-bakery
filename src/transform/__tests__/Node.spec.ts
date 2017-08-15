@@ -54,14 +54,14 @@ describe("Node", () => {
     });
   });
 
-  describe("replace()", () => {
+  describe("replaceWith()", () => {
     it("should work node = root", () => {
       const tree = new Node("svg");
       const root = new Node("g");
       const child = new Node("circle");
       tree.append(child);
 
-      const res = tree.replace(root);
+      const res = tree.replaceWith(root);
 
       t.equal(res.tag, "g");
       t.equal(res.children.length, 0);
@@ -75,7 +75,7 @@ describe("Node", () => {
 
       tree.append(child);
       child.append(child2);
-      child.replace(root);
+      child.replaceWith(root);
 
       t.equal(root.children.length, 0);
     });
@@ -88,7 +88,7 @@ describe("Node", () => {
 
       tree.append(child);
       child.append(child2);
-      tree.replace(root, true);
+      tree.replaceWith(root, true);
 
       t.equal(root.children.length, 1);
       t.equal(root.children[0].tag, "circle");
