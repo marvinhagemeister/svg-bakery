@@ -1,12 +1,12 @@
 import { Visitor } from "../transform/visitor";
+import { Plugin } from "../transform/plugin";
 import Node from "../transform/Node";
 
-export function plugin() {
+export function plugin(): Plugin {
   const visitor: Visitor = {
     svg(node) {
       const props = node.props;
       delete props.xmlns;
-      delete props["xmlns:svg"];
       delete props["xmlns:xlink"];
       delete props.preserveAspectRatio;
 
@@ -15,5 +15,7 @@ export function plugin() {
     },
   };
 
-  return visitor;
+  return {
+    visitor,
+  };
 }
